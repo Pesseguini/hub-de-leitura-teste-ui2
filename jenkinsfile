@@ -6,7 +6,7 @@ pipeline {
 
         stage('Clonar o hub de Leiura Integrado'){
             steps{
-                bat 'git clone' https://github.com/Pesseguini/cypress-hub-de-leitura.git
+                bat 'git clone https://github.com/Pesseguini/cypress-hub-de-leitura.git'
             }
 
         }
