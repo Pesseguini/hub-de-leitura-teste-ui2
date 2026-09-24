@@ -4,56 +4,23 @@ pipeline {
 
     stages {
 
-        stage("Clonar o hub de leitura integrado") {
-            steps {
-                bat 'rm -rf hub-de-leitura-integrado2 || true'
-                bat 'git clone --depth 1 https://github.com/EBAC-QE/hub-de-leitura-integrado2.git'
+        stage('Clonar o hub de Leiura Integrado'){
+            steps{
+                bat 'git clone' https://github.com/Pesseguini/cypress-hub-de-leitura.git
             }
-        }
 
-        stage("Instalar dependencias do projeto") {
+        }
+        stage('Instalar dependências do projeto'){
             steps {
-                dir('hub-de-leitura-integrado') {
+                dir ('cypress-hub-de-leitura') {
                     bat 'npm install'
-                    bat 'nohup npm start '
+                    bat 'npm start'
                 }
             }
-        }
 
-        stage("Clonar o projeto de teste") {
-            steps {
-                bat 'rm -rf hub-de-leitura-teste-ui2 || true'
-                bat 'git clone --depth 1 https://github.com/EBAC-QE/hub-de-leitura-teste-ui2.git'
-            }
         }
+      
 
-        stage("Instalar dependencias do projeto de teste") {
-            steps {
-                dir('hub-de-leitura-teste-ui2') {
-                    bat 'npm install'
-                }
-            }
-        }
-
-        stage('Executar os testes automatizados') {
-            steps {
-                dir('hub-de-leitura-teste-ui2') {
-                    bat 'npm test'
-                }
-
-            }
-        }
     }
-
-    post {
-        always {
-            dir('hub-de-leitura-teste-ui2') {
-                archiveArtifacts artifacts: 'cypress/screenshots/**/*.*,cypress/videos/**/*.*', allowEmptyArchive: true
-                allure includeProperties: false, jdk: '', results: [[ path: 'allure-report']]
-            }
-          
-            bat 'pkill -f "node" || true' 
-        }
+    
     }
-
-}
