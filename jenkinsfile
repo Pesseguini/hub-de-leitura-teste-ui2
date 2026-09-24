@@ -1,19 +1,21 @@
 pipeline {
     agent any
-    tools { nodejs "nodejs"}
+    tools { nodejs "nodejs" }
 
     stages {
-        stage('Clonar o hub de Leiura Integrado'){
-            steps{
+        stage('Clonar Repositório') {
+            steps {
                 bat 'if exist cypress-hub-de-leitura rmdir /s /q cypress-hub-de-leitura'
                 bat 'git clone https://github.com/Pesseguini/cypress-hub-de-leitura.git'
             }
         }
-        stage('Instalar dependências do projeto'){
+        stage('Instalar e Executar') {
             steps {
-                dir ('cypress-hub-de-leitura') {
+                dir('cypress-hub-de-leitura') {
                     bat 'npm install'
+                    // Sobe o servidor em background real do Windows e já engata o teste
                     bat 'start /b npm start'
+                    bat 'npx cypress run'
                 }
             }
         }
