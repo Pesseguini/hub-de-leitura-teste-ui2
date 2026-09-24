@@ -3,24 +3,19 @@ pipeline {
     tools { nodejs "nodejs"}
 
     stages {
-
         stage('Clonar o hub de Leiura Integrado'){
             steps{
+                bat 'if exist cypress-hub-de-leitura rmdir /s /q cypress-hub-de-leitura'
                 bat 'git clone https://github.com/Pesseguini/cypress-hub-de-leitura.git'
             }
-
         }
         stage('Instalar dependências do projeto'){
             steps {
                 dir ('cypress-hub-de-leitura') {
                     bat 'npm install'
-                    bat 'npm start'
+                    bat 'start /b npm start'
                 }
             }
-
         }
-      
-
     }
-    
-    }
+}
