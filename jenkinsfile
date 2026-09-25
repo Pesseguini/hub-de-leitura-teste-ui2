@@ -28,7 +28,7 @@ pipeline {
             steps {
                 bat '''
                     if exist hub-de-leitura-teste-ui2 rmdir /s /q hub-de-leitura-teste-ui2
-                    git clone https://github.com/EBAC-QE/hub-de-leitura-teste-ui2.git
+                    git clone https://github.com/Pesseguini/hub-de-leitura-teste-ui2.git
                 '''
             }
         }
