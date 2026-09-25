@@ -6,31 +6,37 @@ pipeline {
 
         stage("Clonar o hub de leitura integrado") {
             steps {
-                bat 'if exist hub-de-leitura-integrado2 rmdir /s /q hub-de-leitura-integrado2'
-                bat 'git clone --depth 1 https://github.com/EBAC-QE/hub-de-leitura-integrado2.git'
+                bat '''
+                    if exist hub-de-leitura-integrado2 rmdir /s /q hub-de-leitura-integrado2
+                    git clone https://github.com/EBAC-QE/hub-de-leitura-integrado2.git
+                '''
             }
         }
 
         stage("Instalar dependencias do projeto") {
             steps {
                 dir('hub-de-leitura-integrado2') {
-                    bat 'npm install'
-                    bat 'start /b npm start'
+                    bat '''
+                        call npm install 
+                        start /B npm start
+                    '''
                 }
             }
         }
 
         stage("Clonar o projeto de teste") {
             steps {
-                bat 'if exist hub-de-leitura-teste-ui2 rmdir /s /q hub-de-leitura-teste-ui2'
-                bat 'git clone --depth 1 https://github.com/EBAC-QE/hub-de-leitura-teste-ui2.git'
+                bat '''
+                    if exist hub-de-leitura-teste-ui2 rmdir /s /q hub-de-leitura-teste-ui2
+                    git clone https://github.com/EBAC-QE/hub-de-leitura-teste-ui2.git
+                '''
             }
         }
 
         stage("Instalar dependencias do projeto de teste") {
             steps {
                 dir('hub-de-leitura-teste-ui2') {
-                    bat 'npm install'
+                    bat 'call npm install'
                 }
             }
         }
@@ -38,8 +44,9 @@ pipeline {
         stage('Executar os testes automatizados') {
             steps {
                 dir('hub-de-leitura-teste-ui2') {
-                    bat 'npm test'
+                    bat 'call npm test'
                 }
+
             }
         }
     }
@@ -50,9 +57,8 @@ pipeline {
                 archiveArtifacts artifacts: 'cypress/screenshots/**/*.*,cypress/videos/**/*.*', allowEmptyArchive: true
                 allure includeProperties: false, jdk: '', results: [[ path: 'allure-report']]
             }
-            
-            
-            bat 'taskkill /f /im node.exe || true'
+            bat 'taskkill /F /IM node.exe || exit 0'
         }
     }
+
 }
